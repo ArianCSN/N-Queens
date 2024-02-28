@@ -1,37 +1,36 @@
 import random
 import os
 import pygame
-import time 
+from pygame.locals import QUIT
+import tkinter as tk
+from tkinter import simpledialog
+from tkinter import messagebox
 
-from pygame.locals import (
-    MOUSEBUTTONUP,
-    K_ESCAPE,
-    KEYDOWN,
-    QUIT,
-)
- 
+ROOT = tk.Tk()
+ROOT.withdraw()
+number = simpledialog.askinteger(title="Queen Number?",
+                                  prompt="Enter the row number for the first queen (1 - 8): ")
+
 pygame.init()
-win = pygame.display.set_mode((800,800))
-win.fill((255,255,255))
+FullBoard = pygame.display.set_mode((800,800))
+FullBoard.fill((255,255,255))
 current_dir = os.path.dirname(os.path.abspath(__file__))
 wqueen_path = os.path.join(current_dir, "queen-white.png")
 bqueen_path = os.path.join(current_dir, "queen-black.png")
 wqueen = pygame.transform.scale(pygame.image.load(wqueen_path), (100,100))
 bqueen = pygame.transform.scale(pygame.image.load(bqueen_path), (100,100))
-clock = pygame.time.Clock()
-board = [['  ' for i in range(8)] for i in range(8)]
 
-def check_is_digit(input):
-    if input.strip().isdigit():
-        return 1
-    else:
-        return 0
-
+board = [[' ' for i in range(8)] for i in range(8)]
 list = [0, 1, 2, 3, 4, 5, 6, 7]
+number -=1
+if 0<= number <=7 :
+    board[0][number] = 'Q'
+else :
+    messagebox.showerror("Error",
+     "Invalid input! The program will randomly select a position between 1 and 8.")
+    board[0][random.choice(list)] = 'Q' 
 
-board[0][random.choice(list)] = 'Q'
-
-
+#Engine 
 def attack(i, j):
     for k in range(0,8):
         if board[i][k]=="Q" or board[k][j]=="Q":
@@ -51,10 +50,12 @@ def N_queens(n):
                 board[i][j] = 'Q'
                 if N_queens(n-1)==True:
                     return True
-                board[i][j] = "  "
+                board[i][j] = " "
     return False
 
 N_queens(8)
+
+
 i=0 
 while i<8 :
     if i%2 == 0 :
@@ -62,7 +63,7 @@ while i<8 :
     else :
         j=0
     while j<8 :
-        pygame.draw.rect(win,(0,0,0),[i*100,j*100,100,100])
+        pygame.draw.rect(FullBoard,(0,0,0),[i*100,j*100,100,100])
         j+=2
     i+=1
         
@@ -70,10 +71,10 @@ for i in range(8):
     for j in range(8):
         if board[i][j] == "Q":
             if (i+j)%2 == 0 :
-                win.blit(wqueen,(i*100,j*100))
+                FullBoard.blit(wqueen,(i*100,j*100))
             else :
-                win.blit(bqueen,(i*100,j*100))
-pygame.display.update()    
+                FullBoard.blit(bqueen,(i*100,j*100))
+pygame.display.update() 
 
 
 run = True
