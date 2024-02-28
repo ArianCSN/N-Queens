@@ -12,28 +12,32 @@ ROOT.withdraw()
 
 # Configuration
 # CLOCK : speed of queens placement on the board during the program execution.
-CLOCK = 2000
+CLOCK = 0
 # USER_INPUT: If set to 1, the program will prompt the user to input the position of the first queen.
 USER_INPUT = 1
 # RED: If set to 1, after each queen placement and movement, the program highlights the old position in red.
 RED = 0
+# N: Number of Queens and size of the chessboard (N x N).
+N = 10
 # Create the chessboard and load images for black and white queens.
 # Queen with a black background: queen-black.png
 # Queen with a white background: queen-white.png
 # !!Make sure to load the images from the appropriate folder!!
 pygame.init()
-FullBoard = pygame.display.set_mode((800,800))
+FullBoard = pygame.display.set_mode((N*50,N*50))
 FullBoard.fill((255,255,255))
+
 current_dir = os.path.dirname(os.path.abspath(__file__))
 wqueen_path = os.path.join(current_dir, "queen-white.png")
 bqueen_path = os.path.join(current_dir, "queen-black.png")
-wqueen = pygame.transform.scale(pygame.image.load(wqueen_path), (100,100))
-bqueen = pygame.transform.scale(pygame.image.load(bqueen_path), (100,100))
+wqueen = pygame.transform.scale(pygame.image.load(wqueen_path), (50, 50))
+bqueen = pygame.transform.scale(pygame.image.load(bqueen_path), (50, 50))
+
 
 # If the user enters a number between 1 and 8, it will be used as the initial queen position.
 # Otherwise, the program will randomly select a position between 0 and 7 from the list.
 number = 0 
-board = [[' ' for i in range(8)] for i in range(8)]
+board = [[' ' for i in range(N)] for i in range(N)]
 list = [0, 1, 2, 3, 4, 5, 6, 7]
 if (USER_INPUT) :
     number = simpledialog.askinteger(title="Queen Number?",
@@ -52,31 +56,31 @@ else :
 
 # Placing white and black squares on the board
 i=0 
-while i<8 :
+while i<N :
     if i%2 == 0 :
         j=1
     else :
         j=0
-    while j<8 :
-        pygame.draw.rect(FullBoard,(0,0,0),[i*100,j*100,100,100])
+    while j<N :
+        pygame.draw.rect(FullBoard,(0,0,0),[i*50,j*50,50,50])
         j+=2
     i+=1
 
 # placing the first queen
 if (0+number)%2 == 0 :
-    FullBoard.blit(wqueen,(0*100,number*100))
+    FullBoard.blit(wqueen,(0*50,number*50))
 else :
-    FullBoard.blit(bqueen,(0*100,number*100))
+    FullBoard.blit(bqueen,(0*50,number*50))
 pygame.display.update()
 
 
 # N queen Logic
 def attack(i, j):
-    for k in range(0,8):
+    for k in range(0,N):
         if board[i][k]=="Q" or board[k][j]=="Q":
             return True
-    for k in range(0,8):
-        for l in range(0,8):
+    for k in range(0,N):
+        for l in range(0,N):
             if (k+l==i+j) or (k-l==i-j):
                 if board[k][l]=="Q":
                     return True
@@ -84,42 +88,42 @@ def attack(i, j):
 def N_queens(n):
     if n==1:
         return True
-    for i in range(1,8):
-        for j in range(0,8):
+    for i in range(1,N):
+        for j in range(0,N):
             if (not(attack(i,j))) and (board[i][j]!="Q"):
                 board[i][j] = 'Q'
                 if (i+j)%2 == 0 :
-                    FullBoard.blit(wqueen,(i*100,j*100))
+                    FullBoard.blit(wqueen,(i*50,j*50))
                 else :
-                    FullBoard.blit(bqueen,(i*100,j*100))
+                    FullBoard.blit(bqueen,(i*50,j*50))
                     clock.tick(CLOCK)
                     pygame.display.update() 
                 if N_queens(n-1)==True:
                     return True
                 board[i][j] = " "
                 if (RED) :
-                    pygame.draw.rect(FullBoard,(255,0,0),(i*100,j*100,100,100))
+                    pygame.draw.rect(FullBoard,(255,0,0),(i*50,j*50,50,50))
                     clock.tick(CLOCK)
                     pygame.display.update()
                 if (i+j)%2 == 0 :
-                    pygame.draw.rect(FullBoard,(255,255,255),[i*100,j*100,100,100])
+                    pygame.draw.rect(FullBoard,(255,255,255),[i*50,j*50,50,50])
                 else :
-                    pygame.draw.rect(FullBoard,(0,0,0),[i*100,j*100,100,100])
+                    pygame.draw.rect(FullBoard,(0,0,0),[i*50,j*50,50,50])
                     clock.tick(CLOCK)
                     pygame.display.update() 
 
     return False
 
-N_queens(8)
+N_queens(N)
 
 # displaying the final positions of the queens
-for i in range(8):
-    for j in range(8):
+for i in range(N):
+    for j in range(N):
         if board[i][j] == "Q":
             if (i+j)%2 == 0 :
-                FullBoard.blit(wqueen,(i*100,j*100))
+                FullBoard.blit(wqueen,(i*50,j*50))
             else :
-                FullBoard.blit(bqueen,(i*100,j*100))
+                FullBoard.blit(bqueen,(i*50,j*50))
 pygame.display.update() 
 
 # Pygame display loop continues until the user closes the window
