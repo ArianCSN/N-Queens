@@ -1,7 +1,8 @@
 import random
+import os
 import pygame
 import time 
-import os 
+
 from pygame.locals import (
     MOUSEBUTTONUP,
     K_ESCAPE,
@@ -12,12 +13,13 @@ from pygame.locals import (
 pygame.init()
 win = pygame.display.set_mode((800,800))
 win.fill((255,255,255))
+current_dir = os.path.dirname(os.path.abspath(__file__))
+wqueen_path = os.path.join(current_dir, "queen-white.png")
+bqueen_path = os.path.join(current_dir, "queen-black.png")
+wqueen = pygame.transform.scale(pygame.image.load(wqueen_path), (100,100))
+bqueen = pygame.transform.scale(pygame.image.load(bqueen_path), (100,100))
 clock = pygame.time.Clock()
 board = [['  ' for i in range(8)] for i in range(8)]
-current_dir = os.path.dirname(os.path.abspath(__file__))
-queen_path = os.path.join(current_dir, "chessqueen.png")
-
-Q = pygame.image.load(queen_path)
 
 def check_is_digit(input):
     if input.strip().isdigit():
@@ -53,16 +55,26 @@ def N_queens(n):
     return False
 
 N_queens(8)
-
-
-
+i=0 
+while i<8 :
+    if i%2 == 0 :
+        j=1
+    else :
+        j=0
+    while j<8 :
+        pygame.draw.rect(win,(0,0,0),[i*100,j*100,100,100])
+        j+=2
+    i+=1
+        
 for i in range(8):
     for j in range(8):
-        if board[i][j] == "  ":
-            pygame.draw.rect(win,(255,255,255),[i*100,j*100,100,100])
         if board[i][j] == "Q":
-            pygame.draw.rect(win,(0,0,0),[i*100,j*100,100,100])
-pygame.display.update()
+            if (i+j)%2 == 0 :
+                win.blit(wqueen,(i*100,j*100))
+            else :
+                win.blit(bqueen,(i*100,j*100))
+pygame.display.update()    
+
 
 run = True
 while run :
