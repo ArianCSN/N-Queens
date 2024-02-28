@@ -1,61 +1,6 @@
-def func(arr , i , j):
-    for x in range(8) :
-        if arr[x][j] == "Q" :
-            return 1
+import random
 
-    for y in range(8) :
-        if arr[i][y] == "Q" :
-            return 1
-    i2 = i
-    j2 = j
-    for x in range(8) :
-        if arr[i2-1][j2-1] == "Q" :
-                return 1
-        else :
-                i2 -= 1 
-                j2 -= 1 
-    i2 = i
-    j2 = j
-    for x in range(8) :
-            if i2+1 == 8 :
-                break
-            if j2+1 == 8 :
-                break
-            if arr[i2+1][j2+1] == "Q" :
-                return 1
-            else :
-                i2 += 1 
-                j2 += 1 
-    i2 = i
-    j2 = j
-    for x in range(8) :
-            if i2+1 == 8 :
-                break
-            if arr[i2+1][j2-1] == "Q" :
-                return 1
-            else :
-                i2 += 1 
-                j2 -= 1 
-    i2 = i
-    j2 = j
-    for x in range(8) :
-            if j2+1 == 8 :
-                break
-            if arr[i2-1][j2+1] == "Q" :
-                return 1
-            else :
-                i2 -= 1 
-                j2 += 1 
-
-    return 0
-
-def check(arr , i):
-    for x in range (8) :
-        if arr[i][x] == "Q" :
-            return 0
-    return 1
-    
-arr = [
+board = [
  [".", ".", ".", ".", ".", ".", ".", "."]
 ,[".", ".", ".", ".", ".", ".", ".", "."]
 ,[".", ".", ".", ".", ".", ".", ".", "."]
@@ -65,48 +10,33 @@ arr = [
 ,[".", ".", ".", ".", ".", ".", ".", "."]
 ,[".", ".", ".", ".", ".", ".", ".", "."]]
 
-flag = [0 , 0 , 0 , 0 , 0 , 0 , 0 , 0]
-j=0
-i=0 
-ck=0
-stop=0
-while i<=8 :
-    print(flag)
-    print("i old =",i)
-    if ck == 1 :
-        arr[i][flag[i]] = "."
-        print("i new = " ,i)
-        j = flag[i]+1
-        print("j new=" , j)
-    while j<8 :
-      print("actual j =" ,j)
-      if func(arr , i , j) == 0 :
-        arr[i][j] = "Q"
-        flag[i] = j
-        print("j old=",j)
-        break 
-      else :
-           j+=1 
-        
-    if check(arr , i) :
-        ck = 1 
-        i-=1
-        print("error")
-    else :
-        print("correct")
-        j = 0 
-        i+= 1
-    
-    if stop == 10 :
-        break
 
-    stop+=1
+def check(i, j):
+    for k in range(0,8):
+        if board[i][k]=="Q" or board[k][j]=="Q":
+            return False
+    for k in range(0,8):
+        for l in range(0,8):
+            if (k+l==i+j) or (k-l==i-j):
+                if board[k][l]=="Q":
+                    return False
+    return True
 
+def N_queens(n):
+    if n==0:
+        return True
+    for i in range(0,8):
+        for j in range(0,8):
+            if (check(i,j)) and (board[i][j]!="Q"):
+                board[i][j] = 'Q'
+                if N_queens(n-1)==True:
+                    return True
+                board[i][j] = "."
+    return False
 
-n = 8
-for i in range(n):
+N_queens(8)
+
+for i in range(8):
     print()
-    for j in range(n):
-        print (arr[i][j] , end=' ')
-print('\n')
-
+    for j in range(8):
+        print (board[i][j] , end=" ")
